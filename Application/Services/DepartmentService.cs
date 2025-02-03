@@ -9,13 +9,20 @@
 
     public void CreateDepartment(string name, List<Student> students, List<Lecture> lectures)
     {
-        var department = new Department
+        try
         {
-            Name = name,
-            Students = students,
-            Lectures = lectures
-        };
-        _departmentRepository.AddDepartment(department);
+            var department = new Department
+            {
+                Name = name,
+                Students = students,
+                Lectures = lectures
+            };
+            _departmentRepository.AddDepartment(department);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     public void AddStudentToDepartment(int departmentId, Student student)

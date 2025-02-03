@@ -16,6 +16,11 @@ public class StudentRepository
 
     public void AddStudent(Student student)
     {
+        if (_context.Students.Any(s => s.Name == student.Name))
+        {
+            throw new Exception("Studentas jau egzistuoja");
+        }
+
         _context.Students.Add(student);
         _context.SaveChanges();
     }

@@ -27,6 +27,11 @@ public class DepartmentRepository
 
     public void AddDepartment(Department department)
     {
+        if (_context.Departments.Any(d => d.Name == department.Name))
+        {
+            throw new Exception("Fakultetas jau egzistuoja.");
+        }
+
         _context.Departments.Add(department);
         _context.SaveChanges();
     }

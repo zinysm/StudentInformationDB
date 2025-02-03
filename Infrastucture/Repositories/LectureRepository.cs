@@ -27,6 +27,11 @@ public class LectureRepository
 
     public void AddLecture(Lecture lecture)
     {
+        if (_context.Lectures.Any(l => l.Title == lecture.Title))
+        {
+            throw new Exception("Paskaita jau egzistuoja.");
+        }
+
         _context.Lectures.Add(lecture);
         _context.SaveChanges();
     }

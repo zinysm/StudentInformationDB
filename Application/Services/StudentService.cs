@@ -11,18 +11,25 @@
 
     public void CreateStudent(string name, int departmentId, List<int> lectureIds)
     {
-        var department = _departmentRepository.GetDepartmentById(departmentId);
-        var lectures = department?.Lectures.Where(l => lectureIds.Contains(l.Id)).ToList() ?? new List<Lecture>();
-
-        var student = new Student
+        try
         {
-            Name = name,
-            DepartmentId = departmentId,
-            Department = department,
-            Lectures = lectures
-        };
+            var department = _departmentRepository.GetDepartmentById(departmentId);
+            var lectures = department?.Lectures.Where(l => lectureIds.Contains(l.Id)).ToList() ?? new List<Lecture>();
 
-        _studentRepository.AddStudent(student);
+            var student = new Student
+            {
+                Name = name,
+                DepartmentId = departmentId,
+                Department = department,
+                Lectures = lectures
+            };
+
+            _studentRepository.AddStudent(student);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     public void TransferStudent(int studentId, int newDepartmentId)

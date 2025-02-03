@@ -14,6 +14,18 @@ public class StudentDB : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Department>()
+            .HasIndex(d => d.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Lecture>()
+            .HasIndex(l => l.Title)
+            .IsUnique();
+
+        modelBuilder.Entity<Student>()
+            .HasIndex(s => s.Name)
+            .IsUnique();
+
+        modelBuilder.Entity<Department>()
             .HasMany(d => d.Students)
             .WithOne(s => s.Department)
             .HasForeignKey(s => s.DepartmentId);

@@ -5,7 +5,7 @@
 namespace StudentInformationDB.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class _1DB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace StudentInformationDB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,7 +29,7 @@ namespace StudentInformationDB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,7 +42,7 @@ namespace StudentInformationDB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -110,6 +110,18 @@ namespace StudentInformationDB.Migrations
                 column: "LecturesId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Departments_Name",
+                table: "Departments",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lectures_Title",
+                table: "Lectures",
+                column: "Title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_LectureStudent_StudentsId",
                 table: "LectureStudent",
                 column: "StudentsId");
@@ -118,6 +130,12 @@ namespace StudentInformationDB.Migrations
                 name: "IX_Students_DepartmentId",
                 table: "Students",
                 column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_Name",
+                table: "Students",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -1,5 +1,4 @@
-﻿// UI/Menu.cs
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 public class Menu
 {
@@ -18,121 +17,176 @@ public class Menu
     {
         while (true)
         {
-            Console.WriteLine("\nMenu:");
-            Console.WriteLine("1. Create Department");
-            Console.WriteLine("2. Add Student to Department");
-            Console.WriteLine("3. Add Lecture to Department");
-            Console.WriteLine("4. Create Student and Enroll in Lectures");
-            Console.WriteLine("5. Create Lecture");
-            Console.WriteLine("6. Transfer Student to Another Department");
-            Console.WriteLine("7. Display All Students in Department");
-            Console.WriteLine("8. Display All Lectures in Department");
-            Console.WriteLine("9. Display All Lectures for a Student");
-            Console.WriteLine("10. Display All Lectures");
-            Console.WriteLine("0. Exit");
-
-            Console.Write("\nEnter your choice: ");
+            DisplayMenuOptions();
+            Console.Write("\nĮvesk savo pasirinkimą ");
             var choice = Console.ReadLine();
 
             switch (choice)
             {
-                case "1":
-                    Console.Write("Enter Department Name: ");
-                    var departmentName = Console.ReadLine();
-                    _departmentService.CreateDepartment(departmentName, new List<Student>(), new List<Lecture>());
-                    Console.WriteLine("Department created successfully!");
-                    break;
-
-                case "2":
-                    Console.Write("Enter Department ID: ");
-                    var departmentId = int.Parse(Console.ReadLine());
-                    Console.Write("Enter Student Name: ");
-                    var studentName = Console.ReadLine();
-                    var student = new Student { Name = studentName };
-                    _departmentService.AddStudentToDepartment(departmentId, student);
-                    Console.WriteLine("Student added to department successfully!");
-                    break;
-
-                case "3":
-                    Console.Write("Enter Department ID: ");
-                    var deptId = int.Parse(Console.ReadLine());
-                    Console.Write("Enter Lecture Title: ");
-                    var lectureTitle = Console.ReadLine();
-                    var lecture = new Lecture { Title = lectureTitle };
-                    _departmentService.AddLectureToDepartment(deptId, lecture);
-                    Console.WriteLine("Lecture added to department successfully!");
-                    break;
-
-                case "4":
-                    Console.Write("Enter Student Name: ");
-                    var newStudentName = Console.ReadLine();
-                    Console.Write("Enter Department ID: ");
-                    var deptIdForStudent = int.Parse(Console.ReadLine());
-                    Console.Write("Enter Lecture IDs (comma-separated): ");
-                    var lectureIdsInput = Console.ReadLine();
-                    var lectureIds = lectureIdsInput.Split(',').Select(int.Parse).ToList();
-                    _studentService.CreateStudent(newStudentName, deptIdForStudent, lectureIds);
-                    Console.WriteLine("Student created and enrolled in lectures successfully!");
-                    break;
-
-                case "5":
-                    Console.Write("Enter Lecture Title: ");
-                    var newLectureTitle = Console.ReadLine();
-                    _lectureService.CreateLecture(newLectureTitle);
-                    Console.WriteLine("Lecture created successfully!");
-                    break;
-
-                case "6":
-                    Console.Write("Enter Student ID: ");
-                    var studentId = int.Parse(Console.ReadLine());
-                    Console.Write("Enter New Department ID: ");
-                    var newDeptId = int.Parse(Console.ReadLine());
-                    _studentService.TransferStudent(studentId, newDeptId);
-                    Console.WriteLine("Student transferred successfully!");
-                    break;
-
-                case "7":
-                    Console.Write("Enter Department ID: ");
-                    var deptIdToDisplay = int.Parse(Console.ReadLine());
-                    var studentsInDept = _departmentService.GetStudentsInDepartment(deptIdToDisplay);
-                    Console.WriteLine("Students in Department:");
-                    foreach (var s in studentsInDept)
-                        Console.WriteLine($"- {s.Id}: {s.Name}");
-                    break;
-
-                case "8":
-                    Console.Write("Enter Department ID: ");
-                    var deptIdToDisplayLectures = int.Parse(Console.ReadLine());
-                    var lecturesInDept = _departmentService.GetLecturesInDepartment(deptIdToDisplayLectures);
-                    Console.WriteLine("Lectures in Department:");
-                    foreach (var l in lecturesInDept)
-                        Console.WriteLine($"- {l.Id}: {l.Title}");
-                    break;
-
-                case "9":
-                    Console.Write("Enter Student ID: ");
-                    var studentIdToDisplayLectures = int.Parse(Console.ReadLine());
-                    var lecturesForStudent = _studentService.GetLecturesForStudent(studentIdToDisplayLectures);
-                    Console.WriteLine("Lectures for Student:");
-                    foreach (var l in lecturesForStudent)
-                        Console.WriteLine($"- {l.Id}: {l.Title}");
-                    break;
-
-                case "10":
-                    var allLectures = _lectureService.GetAllLectures();
-                    Console.WriteLine("All Lectures:");
-                    foreach (var l in allLectures)
-                        Console.WriteLine($"- {l.Id}: {l.Title}");
-                    break;
-
+                case "1": CreateDepartment(); break;
+                case "2": AddStudentToDepartment(); break;
+                case "3": AddLectureToDepartment(); break;
+                case "4": CreateStudentAndEnroll(); break;
+                case "5": CreateLecture(); break;
+                case "6": TransferStudent(); break;
+                case "7": DisplayStudentsInDepartment(); break;
+                case "8": DisplayLecturesInDepartment(); break;
+                case "9": DisplayLecturesForStudent(); break;
+                case "10": DisplayAllLectures(); break;
                 case "0":
-                    Console.WriteLine("Exiting the program. Goodbye!");
+                    Console.WriteLine("Programos pabaiga");
                     return;
-
                 default:
-                    Console.WriteLine("Invalid choice. Please try again.");
+                    Console.WriteLine("Neteisingas pasirinkimas");
                     break;
             }
         }
+    }
+
+    private void DisplayMenuOptions()
+    {
+        Console.WriteLine("\nMenu:");
+        Console.WriteLine("1. Sukurti fakultetą");
+        Console.WriteLine("2. Priskirti studentui fakultetą");
+        Console.WriteLine("3. Pridėti paskaitą fakultetui");
+        Console.WriteLine("4. Sukurti studentą ir priskirti paskaitas");
+        Console.WriteLine("5. Sukurti paskaitas");
+        Console.WriteLine("6. Perkelti studentą į kitą fakultetą");
+        Console.WriteLine("7. Parodyti visus studentus fakultete");
+        Console.WriteLine("8. Parodyti paskaitas fakultete");
+        Console.WriteLine("9. Parodyti studento paskaitas");
+        Console.WriteLine("10. Parodyti visas paskaitas");
+        Console.WriteLine("0. Pabaigas");
+    }
+
+    private void CreateDepartment()
+    {
+        Console.Write("Įvesk fakulteto pavadinimą: ");
+        var departmentName = Console.ReadLine();
+        _departmentService.CreateDepartment(departmentName, new List<Student>(), new List<Lecture>());
+        Console.WriteLine("Fakultetas sukurtas!");
+    }
+
+    private void AddStudentToDepartment()
+    {
+        Console.Write("Departamento ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        Console.Write("Įvesk studento vardą pavardę: ");
+        var studentName = Console.ReadLine();
+        var student = new Student { Name = studentName };
+        _departmentService.AddStudentToDepartment(departmentId, student);
+        Console.WriteLine("Studentas priskirtas fakultetui!");
+    }
+
+    private void AddLectureToDepartment()
+    {
+        Console.Write("Įvessk fakulteto ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        Console.Write("Įvesk paskaitos pavadinimą: ");
+        var lectureTitle = Console.ReadLine();
+        var lecture = new Lecture { Title = lectureTitle };
+        _departmentService.AddLectureToDepartment(departmentId, lecture);
+        Console.WriteLine("Paskaitos pridėtos departamentui");
+    }
+
+    private void CreateStudentAndEnroll()
+    {
+        Console.Write("Įvesk studento vardą pavardę: ");
+        var studentName = Console.ReadLine();
+        Console.Write("Įvessk fakulteto ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        Console.Write("Įvesk paskaitų ID, atskirk kableliais ");
+        var lectureIdsInput = Console.ReadLine();
+        var lectureIds = lectureIdsInput.Split(',').Select(s => int.TryParse(s, out int id) ? id : -1).Where(id => id != -1).ToList();
+        _studentService.CreateStudent(studentName, departmentId, lectureIds);
+        Console.WriteLine("Studentas sukurtas ir pridėtos paskaitos");
+    }
+
+    private void CreateLecture()
+    {
+        Console.Write("Įvesk paskaitos pavadinimą: ");
+        var lectureTitle = Console.ReadLine();
+        _lectureService.CreateLecture(lectureTitle);
+        Console.WriteLine("Paskaitą sukurta");
+    }
+
+    private void TransferStudent()
+    {
+        Console.Write("Įvesk studento ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int studentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        Console.Write("Įvesk fakulteto ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int newDepartmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        _studentService.TransferStudent(studentId, newDepartmentId);
+        Console.WriteLine("Studentas perkeltas sėkmingai");
+    }
+
+    private void DisplayStudentsInDepartment()
+    {
+        Console.Write("Įvesk fakulteto ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        var students = _departmentService.GetStudentsInDepartment(departmentId);
+        Console.WriteLine("Studentai fakultete:");
+        foreach (var student in students)
+            Console.WriteLine($"- {student.Id}: {student.Name}");
+    }
+
+    private void DisplayLecturesInDepartment()
+    {
+        Console.Write("Įvesk fakulteto ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        var lectures = _departmentService.GetLecturesInDepartment(departmentId);
+        Console.WriteLine("Paskaitos fakultete:");
+        foreach (var lecture in lectures)
+            Console.WriteLine($"- {lecture.Id}: {lecture.Title}");
+    }
+
+    private void DisplayLecturesForStudent()
+    {
+        Console.Write("Įvesk studento ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int studentId))
+        {
+            Console.WriteLine("Neteisingai įvesta. Įvesk teisingą reikšmę");
+            return;
+        }
+        var lectures = _studentService.GetLecturesForStudent(studentId);
+        Console.WriteLine("Studento paskaitos:");
+        foreach (var lecture in lectures)
+            Console.WriteLine($"- {lecture.Id}: {lecture.Title}");
+    }
+
+    private void DisplayAllLectures()
+    {
+        var lectures = _lectureService.GetAllLectures();
+        Console.WriteLine("Visos paskaitos:");
+        foreach (var lecture in lectures)
+            Console.WriteLine($"- {lecture.Id}: {lecture.Title}");
     }
 }

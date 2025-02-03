@@ -9,8 +9,15 @@
 
     public void CreateLecture(string title)
     {
-        var lecture = new Lecture { Title = title };
-        _lectureRepository.AddLecture(lecture);
+        try
+        {
+            var lecture = new Lecture { Title = title };
+            _lectureRepository.AddLecture(lecture);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 
     public List<Lecture> GetAllLectures()
