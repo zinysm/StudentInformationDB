@@ -35,6 +35,28 @@ public class DepartmentRepository
         _context.Departments.Add(department);
         _context.SaveChanges();
     }
+    public void AddLectureToDepartment(int departmentId, Lecture lecture)
+    {
+        var department = _context.Departments.Include(d => d.Lectures).FirstOrDefault(d => d.Id == departmentId);
+        if (department != null)
+        {
+            // Patikriname, ar paskaita jau nėra priskirta
+            if (!department.Lectures.Contains(lecture))
+            {
+                department.Lectures.Add(lecture);
+                _context.SaveChanges();
+                Console.WriteLine($"Paskaita {lecture.Title} priskirta departamentui.");
+            }
+            else
+            {
+                Console.WriteLine("Paskaita jau priskirta šiam fakultetui.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Departamentas nerastas.");
+        }
+    }
 
     public void UpdateDepartment(Department department)
     {

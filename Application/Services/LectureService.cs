@@ -11,8 +11,16 @@
     {
         try
         {
+            var lectureExists = _lectureRepository.GetAllLectures().Any(l => l.Title == title);
+            if (lectureExists)
+            {
+                Console.WriteLine("Error: Paskaita jau egzistuoja.");
+                return; // Nutraukiame vykdymą, jei paskaita jau egzistuoja
+            }
+
             var lecture = new Lecture { Title = title };
             _lectureRepository.AddLecture(lecture);
+            Console.WriteLine("Paskaita sukurta!");
         }
         catch (Exception ex)
         {

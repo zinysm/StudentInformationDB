@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace StudentInformationDB.Migrations
 {
     [DbContext(typeof(StudentDB))]
-    [Migration("20250130193035_1DB")]
+    [Migration("20250203201430_1DB")]
     partial class _1DB
     {
         /// <inheritdoc />

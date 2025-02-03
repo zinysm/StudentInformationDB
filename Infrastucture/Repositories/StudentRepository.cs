@@ -9,6 +9,11 @@ public class StudentRepository
         _context = context;
     }
 
+    public List<Student> GetAllStudents()  // Pridėtas metodas
+    {
+        return _context.Students.ToList();  // Grąžina visus studentus
+    }
+
     public Student GetStudentById(int id)
     {
         return _context.Students.Include(s => s.Lectures).FirstOrDefault(s => s.Id == id);
