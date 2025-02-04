@@ -39,7 +39,7 @@ public class Menu
                     AssignLecturesToStudent();
                     break;
                 case "6":
-                    CreateLecture();  // Čia pridedame CreateLecture metodą
+                    CreateLecture();  
                     break;
                 case "7":
                     TransferStudent();
@@ -193,7 +193,6 @@ public class Menu
             return;
         }
         _studentService.TransferStudent(studentId, newDepartmentId);
-        Console.WriteLine("Studentas perkeltas sėkmingai");
     }
 
     private void DisplayStudentsInDepartment()

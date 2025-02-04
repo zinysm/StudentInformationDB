@@ -107,36 +107,56 @@
         var student = _studentRepository.GetStudentById(studentId);
         var newDepartment = _departmentRepository.GetDepartmentById(newDepartmentId);
 
-        if (student != null && newDepartment != null)
+        if (student == null)
         {
-            student.DepartmentId = newDepartmentId;
-            student.Department = newDepartment;
+            Console.WriteLine("Studentas nerastas.");
+            return;
+        }
 
-            var validLectures = student.Lectures.Where(l => newDepartment.Lectures.Contains(l)).ToList();
-            student.Lectures = validLectures;
+        if (newDepartment == null)
+        {
+            Console.WriteLine("Naujas fakultetas nerastas.");
+            return;
+        }
 
-            var newLectures = newDepartment.Lectures.Where(l => !student.Lectures.Contains(l)).ToList();
+        // Pašalinamos paskaitos, kurios nepriklauso naujam fakultetui
+        var validLectures = student.Lectures.Where(l => newDepartment.Lectures.Contains(l)).ToList();
+        student.Lectures = validLectures;
 
-            if (newLectures.Any())
+        Console.WriteLine($"Studentas perkeltas į fakultetą: {newDepartment.Name}");
+
+        // Leidžiama pasirinkti naujas paskaitas
+        var newLectures = newDepartment.Lectures.Where(l => !student.Lectures.Contains(l)).ToList();
+
+        if (newLectures.Any())
+        {
+            Console.WriteLine("Galimos naujos paskaitos šiame fakultete:");
+            for (int i = 0; i < newLectures.Count; i++)
             {
-                Console.WriteLine("Naujos paskaitos, kurias galima priskirti studentui:");
-                foreach (var lecture in newLectures)
-                {
-                    Console.WriteLine($"- {lecture.Title}");
-                }
-
-                Console.Write("Ar norite priskirti šias paskaitas studentui? (y/n): ");
-                var choice = Console.ReadLine();
-                if (choice?.ToLower() == "y")
-                {
-                    student.Lectures.AddRange(newLectures);
-                }
+                Console.WriteLine($"{i + 1}. {newLectures[i].Title}");
             }
 
-            _studentRepository.UpdateStudent(student);
-            Console.WriteLine("Studentas sėkmingai perkeltas su paskaitomis.");
+            Console.Write("Įveskite pasirinktų paskaitų numerius (atskirkite kableliais) arba palikite tuščią, jei nenorite priskirti naujų paskaitų: ");
+            var input = Console.ReadLine();
+
+            if (!string.IsNullOrWhiteSpace(input))
+            {
+                var selectedIndexes = input.Split(',')
+                    .Select(s => int.TryParse(s.Trim(), out int index) ? index - 1 : -1)
+                    .Where(index => index >= 0 && index < newLectures.Count)
+                    .ToList();
+
+                foreach (var index in selectedIndexes)
+                {
+                    student.Lectures.Add(newLectures[index]);
+                }
+            }
         }
+
+        _studentRepository.UpdateStudent(student);
+        Console.WriteLine("Studentas sėkmingai perkeltas ir paskaitos atnaujintos.");
     }
+
 
     public List<Lecture> GetLecturesForStudent(int studentId)
     {
